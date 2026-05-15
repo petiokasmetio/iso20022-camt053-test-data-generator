@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.math.RoundingMode;
 
 /**
  * CAMT.053.001.02 XML generator (console app).
@@ -260,7 +261,7 @@ public class Camt053Generator {
         }
         BigDecimal signedClose = signedOpen.add(signedDelta);
         String closeInd = signedClose.signum() >= 0 ? "CRDT" : "DBIT";
-        BigDecimal closeAmt = signedClose.abs().setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal closeAmt = signedClose.abs().setScale(2, RoundingMode.HALF_UP);
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
