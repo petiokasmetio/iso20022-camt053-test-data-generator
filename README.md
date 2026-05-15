@@ -67,14 +67,9 @@ Example Use Case
 
 This tool can be used to generate synthetic banking statement test data for:
 
-QA testing
-Regression testing
-Banking workflow validation
-Account statement scenario preparation
-XML-based test data generation practice
-Demonstrating test data automation skills
+QA testing, Regression testing, Banking workflow validation, Account statement scenario preparation, XML-based test data generation practice, Demonstrating test data automation skills
 
-Project Status
+# Project Status
 
 Current version:
 
