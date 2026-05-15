@@ -146,7 +146,7 @@ public class Camt053Generator {
 
             // Debtor & remittance (shared across all entries)
             String debtorName = promptString("Debtor name (RltdPties/Dbtr/Nm)", "Demo Debtor Ltd", "Demo Debtor Ltd");
-            String debtorIban = promptString("Debtor IBAN (RltdPties/DbtrAcct/Id/IBAN)", "DEMOIBAN00000000000000",
+            String debtorIban = promptString("Debtor IBAN (RltdPties/DbtrAcct/Id/IBAN)", "DE89370400440532013000",
                     "DE89370400440532013000");
             String debtorAgentBic = promptString("Debtor agent BIC (RltdAgts/DbtrAgt/FinInstnId/BIC)", svcrBic,
                     "DEMOBAK0XXX");
