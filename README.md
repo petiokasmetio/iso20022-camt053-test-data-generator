@@ -55,18 +55,6 @@ The closing booked balance is calculated using the following logic:
 
 Closing Balance = Opening Balance + Credit Entries - Debit Entries
 
-Document
-└── BkToCstmrStmt
-    ├── GrpHdr
-    └── Stmt
-        ├── FrToDt
-        ├── Acct
-        ├── Bal OPBD
-        ├── Bal CLBD
-        └── Ntry
-            └── NtryDtls
-                └── TxDtls
-
 How to compile:
 javac -encoding UTF-8 Camt053Generator.java
 
@@ -74,11 +62,6 @@ How to run:
 java -cp . Camt053Generator
 
 The application will start asking for input values through the console.
-Example:
-=== CAMT.053.001.02 XML Generator (Java) ===
-Output filename (example: statement.xml) [default: camt053_generated.xml]:
-Timezone offset (example: +02:00) [default: +02:00]:
-Creation date for message/statement (YYYY-MM-DD):
 
 Example Use Case
 
