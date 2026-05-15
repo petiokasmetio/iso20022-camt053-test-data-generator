@@ -22,23 +22,24 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
-* CAMT.053.001.02 XML generator (console app).
-* Portfolio/demo version using synthetic data only.
-* This project does not contain real customer, bank, account,
-* transaction, production or internal project information.
-*
-* - Prompts are in ENGLISH.
-* - Generates unique MsgId / Stmt Id / random ElectronicSeqNb.
-* - Asks how many <Ntry> blocks to create, and whether each is CRDT or DBIT.
-* - Randomizes amounts within a user-defined range.
-* - Calculates closing booked balance (CLBD) from opening booked balance (OPBD) + entries.
-*
-* Compile:
-*   javac Camt053Generator.java
-*
-* Run:
-*   java Camt053Generator
-*/
+ * CAMT.053.001.02 XML generator (console app).
+ * Portfolio/demo version using synthetic data only.
+ * This project does not contain real customer, bank, account,
+ * transaction, production or internal project information.
+ *
+ * - Prompts are in ENGLISH.
+ * - Generates unique MsgId / Stmt Id / random ElectronicSeqNb.
+ * - Asks how many <Ntry> blocks to create, and whether each is CRDT or DBIT.
+ * - Randomizes amounts within a user-defined range.
+ * - Calculates closing booked balance (CLBD) from opening booked balance (OPBD)
+ * + entries.
+ *
+ * Compile:
+ * javac Camt053Generator.java
+ *
+ * Run:
+ * java Camt053Generator
+ */
 public class Camt053Generator {
 
     // Namespaces
@@ -75,7 +76,8 @@ public class Camt053Generator {
 
             String acctOtherId = promptString("Acct/Id/Othr/Id (account id)", null, "10000000/999999999EUR");
             String acctShort = extractAcctShort(acctOtherId);
-            if (acctShort == null) acctShort = randomDigits(9);
+            if (acctShort == null)
+                acctShort = randomDigits(9);
 
             String msgIdMiddle = promptString("MsgId middle code (after currency)", "DEMOREF", "DEMOREF");
 
@@ -104,7 +106,8 @@ public class Camt053Generator {
 
             // Opening balance (OPBD)
             BigDecimal openingBal = promptDecimal("Opening booked balance amount (OPBD)", new BigDecimal("1000.00"));
-            String openingInd = promptChoice("Opening balance CdtDbtInd (CRDT or DBIT)", "CRDT", new String[]{"CRDT", "DBIT"});
+            String openingInd = promptChoice("Opening balance CdtDbtInd (CRDT or DBIT)", "CRDT",
+                    new String[] { "CRDT", "DBIT" });
 
             LocalDate defaultOpeningDate = fromDate.minusDays(1);
             LocalDate openingDate = promptDate("Opening balance date (OPBD/Dt) (YYYY-MM-DD)", defaultOpeningDate);
@@ -114,13 +117,16 @@ public class Camt053Generator {
             BigDecimal maxAmt = promptDecimal("Random entry max amount", new BigDecimal("500.00"));
             if (maxAmt.compareTo(minAmt) < 0) {
                 System.out.println("Max amount was smaller than min amount. Swapping them.");
-                BigDecimal tmp = minAmt; minAmt = maxAmt; maxAmt = tmp;
+                BigDecimal tmp = minAmt;
+                minAmt = maxAmt;
+                maxAmt = tmp;
             }
 
             int nEntries = promptInt("How many <Ntry> entries do you want to generate?", 1, 1, 10_000);
             Entry[] entries = new Entry[nEntries];
             for (int i = 0; i < nEntries; i++) {
-                String ind = promptChoice("Entry #" + (i + 1) + " type (CRDT or DBIT)", "CRDT", new String[]{"CRDT", "DBIT"});
+                String ind = promptChoice("Entry #" + (i + 1) + " type (CRDT or DBIT)", "CRDT",
+                        new String[] { "CRDT", "DBIT" });
                 BigDecimal amt = randomAmount(minAmt, maxAmt);
                 entries[i] = new Entry(ind, amt);
             }
@@ -140,10 +146,13 @@ public class Camt053Generator {
 
             // Debtor & remittance (shared across all entries)
             String debtorName = promptString("Debtor name (RltdPties/Dbtr/Nm)", "Demo Debtor Ltd", "Demo Debtor Ltd");
-            String debtorIban = promptString("Debtor IBAN (RltdPties/DbtrAcct/Id/IBAN)", "DEMOIBAN00000000000000", "DE89370400440532013000");
-            String debtorAgentBic = promptString("Debtor agent BIC (RltdAgts/DbtrAgt/FinInstnId/BIC)", svcrBic, "DEMOBAK0XXX");
+            String debtorIban = promptString("Debtor IBAN (RltdPties/DbtrAcct/Id/IBAN)", "DEMOIBAN00000000000000",
+                    "DE89370400440532013000");
+            String debtorAgentBic = promptString("Debtor agent BIC (RltdAgts/DbtrAgt/FinInstnId/BIC)", svcrBic,
+                    "DEMOBAK0XXX");
 
-            String ustrd = promptString("Remittance info Ustrd (RmtInf/Ustrd)", "DEMO SEPA TEST PAYMENT", "DEMO SEPA TEST PAYMENT");
+            String ustrd = promptString("Remittance info Ustrd (RmtInf/Ustrd)", "DEMO SEPA TEST PAYMENT",
+                    "DEMO SEPA TEST PAYMENT");
             String addtlNtryInf = promptString("AddtlNtryInf", "DEMO TRANSACTION INFO", "DEMO TRANSACTION INFO");
 
             // Build XML
@@ -160,8 +169,7 @@ public class Camt053Generator {
                     ntryPrtryCd, ntryPrtryIssr,
                     txPrtryCd, txPrtryIssr,
                     debtorName, debtorIban, debtorAgentBic,
-                    ustrd, addtlNtryInf
-            );
+                    ustrd, addtlNtryInf);
 
             writeXml(xml, outFile);
             System.out.println("✅ XML written to: " + outFile);
@@ -174,8 +182,8 @@ public class Camt053Generator {
     }
 
     private static class Entry {
-        final String ind;      // CRDT / DBIT
-        final BigDecimal amt;  // 2dp
+        final String ind; // CRDT / DBIT
+        final BigDecimal amt; // 2dp
 
         Entry(String ind, BigDecimal amt) {
             this.ind = ind;
@@ -227,8 +235,7 @@ public class Camt053Generator {
             String debtorIban,
             String debtorAgentBic,
             String ustrd,
-            String addtlNtryInf
-    ) throws Exception {
+            String addtlNtryInf) throws Exception {
 
         int seq = randomInt(1, 9999);
         String yyyymmdd = creationDate.format(DateTimeFormatter.BASIC_ISO_DATE);
@@ -246,8 +253,10 @@ public class Camt053Generator {
         BigDecimal signedOpen = openingInd.equals("CRDT") ? openingBal : openingBal.negate();
         BigDecimal signedDelta = BigDecimal.ZERO;
         for (Entry e : entries) {
-            if (e.ind.equals("CRDT")) signedDelta = signedDelta.add(e.amt);
-            else signedDelta = signedDelta.subtract(e.amt);
+            if (e.ind.equals("CRDT"))
+                signedDelta = signedDelta.add(e.amt);
+            else
+                signedDelta = signedDelta.subtract(e.amt);
         }
         BigDecimal signedClose = signedOpen.add(signedDelta);
         String closeInd = signedClose.signum() >= 0 ? "CRDT" : "DBIT";
@@ -307,9 +316,12 @@ public class Camt053Generator {
         elText(doc, ownr, "Nm", ownerName);
         Element ownrPstl = el(doc, ownr, "PstlAdr");
         elText(doc, ownrPstl, "AdrTp", ownerAdrTp);
-        if (!isBlank(ownerAdrLine1)) elText(doc, ownrPstl, "AdrLine", ownerAdrLine1);
-        if (!isBlank(ownerAdrLine2)) elText(doc, ownrPstl, "AdrLine", ownerAdrLine2);
-        if (!isBlank(ownerAdrLine3)) elText(doc, ownrPstl, "AdrLine", ownerAdrLine3);
+        if (!isBlank(ownerAdrLine1))
+            elText(doc, ownrPstl, "AdrLine", ownerAdrLine1);
+        if (!isBlank(ownerAdrLine2))
+            elText(doc, ownrPstl, "AdrLine", ownerAdrLine2);
+        if (!isBlank(ownerAdrLine3))
+            elText(doc, ownrPstl, "AdrLine", ownerAdrLine3);
 
         Element ownrId = el(doc, ownr, "Id");
         Element ownrOrg = el(doc, ownrId, "OrgId");
@@ -333,8 +345,10 @@ public class Camt053Generator {
         elText(doc, brnch, "Nm", branchName);
         Element brPstl = el(doc, brnch, "PstlAdr");
         elText(doc, brPstl, "AdrTp", branchAdrTp);
-        if (!isBlank(branchAdrLine1)) elText(doc, brPstl, "AdrLine", branchAdrLine1);
-        if (!isBlank(branchAdrLine2)) elText(doc, brPstl, "AdrLine", branchAdrLine2);
+        if (!isBlank(branchAdrLine1))
+            elText(doc, brPstl, "AdrLine", branchAdrLine1);
+        if (!isBlank(branchAdrLine2))
+            elText(doc, brPstl, "AdrLine", branchAdrLine2);
 
         // Balances: OPBD
         Element balOpen = el(doc, stmt, "Bal");
@@ -474,23 +488,33 @@ public class Camt053Generator {
 
     private static String extractAcctShort(String acctOtherId) {
         Matcher m = ACCT_SHORT_PATTERN.matcher(acctOtherId);
-        if (m.find()) return m.group(1);
+        if (m.find())
+            return m.group(1);
         return null;
     }
 
     private static String randomDigits(int n) {
         StringBuilder sb = new StringBuilder(n);
-        for (int i = 0; i < n; i++) sb.append(RNG.nextInt(10));
+        for (int i = 0; i < n; i++)
+            sb.append(RNG.nextInt(10));
         return sb.toString();
     }
 
     private static int randomInt(int min, int max) {
-        if (min > max) { int t = min; min = max; max = t; }
+        if (min > max) {
+            int t = min;
+            min = max;
+            max = t;
+        }
         return min + RNG.nextInt((max - min) + 1);
     }
 
     private static BigDecimal randomAmount(BigDecimal min, BigDecimal max) {
-        if (max.compareTo(min) < 0) { BigDecimal t = min; min = max; max = t; }
+        if (max.compareTo(min) < 0) {
+            BigDecimal t = min;
+            min = max;
+            max = t;
+        }
         double lo = min.doubleValue();
         double hi = max.doubleValue();
         double v = lo + (hi - lo) * RNG.nextDouble();
@@ -510,14 +534,18 @@ public class Camt053Generator {
     private static String promptString(String label, String defaultValue, String example) throws Exception {
         while (true) {
             String suffix = "";
-            if (example != null && !example.isEmpty()) suffix += " (example: " + example + ")";
-            if (defaultValue != null) suffix += " [default: " + defaultValue + "]";
+            if (example != null && !example.isEmpty())
+                suffix += " (example: " + example + ")";
+            if (defaultValue != null)
+                suffix += " [default: " + defaultValue + "]";
             System.out.print(label + suffix + ": ");
             String line = IN.readLine();
-            if (line == null) throw new RuntimeException("Input closed.");
+            if (line == null)
+                throw new RuntimeException("Input closed.");
             line = line.trim();
             if (line.isEmpty()) {
-                if (defaultValue != null) return defaultValue;
+                if (defaultValue != null)
+                    return defaultValue;
                 System.out.println("This field is required.");
                 continue;
             }
@@ -529,10 +557,12 @@ public class Camt053Generator {
         while (true) {
             System.out.print(label + " [default: " + defaultValue + "]: ");
             String line = IN.readLine();
-            if (line == null) throw new RuntimeException("Input closed.");
+            if (line == null)
+                throw new RuntimeException("Input closed.");
             line = line.trim();
             int v;
-            if (line.isEmpty()) v = defaultValue;
+            if (line.isEmpty())
+                v = defaultValue;
             else {
                 try {
                     v = Integer.parseInt(line);
@@ -553,9 +583,11 @@ public class Camt053Generator {
         while (true) {
             System.out.print(label + " [default: " + defaultValue.format(DATE) + "]: ");
             String line = IN.readLine();
-            if (line == null) throw new RuntimeException("Input closed.");
+            if (line == null)
+                throw new RuntimeException("Input closed.");
             line = line.trim();
-            if (line.isEmpty()) return defaultValue;
+            if (line.isEmpty())
+                return defaultValue;
             try {
                 return LocalDate.parse(line, DATE);
             } catch (Exception ex) {
@@ -568,9 +600,11 @@ public class Camt053Generator {
         while (true) {
             System.out.print(label + " [default: " + defaultValue.toPlainString() + "]: ");
             String line = IN.readLine();
-            if (line == null) throw new RuntimeException("Input closed.");
+            if (line == null)
+                throw new RuntimeException("Input closed.");
             line = line.trim();
-            if (line.isEmpty()) return defaultValue.setScale(2, BigDecimal.ROUND_HALF_UP);
+            if (line.isEmpty())
+                return defaultValue.setScale(2, BigDecimal.ROUND_HALF_UP);
             try {
                 BigDecimal v = new BigDecimal(line);
                 return v.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -584,18 +618,21 @@ public class Camt053Generator {
         while (true) {
             System.out.print(label + " [default: " + defaultValue + "]: ");
             String line = IN.readLine();
-            if (line == null) throw new RuntimeException("Input closed.");
+            if (line == null)
+                throw new RuntimeException("Input closed.");
             line = line.trim();
             String v = line.isEmpty() ? defaultValue : line;
             v = v.toUpperCase(Locale.ROOT);
 
             for (String a : allowed) {
-                if (a.equalsIgnoreCase(v)) return a.toUpperCase(Locale.ROOT);
+                if (a.equalsIgnoreCase(v))
+                    return a.toUpperCase(Locale.ROOT);
             }
             System.out.print("Allowed values: ");
             for (int i = 0; i < allowed.length; i++) {
                 System.out.print(allowed[i]);
-                if (i < allowed.length - 1) System.out.print(", ");
+                if (i < allowed.length - 1)
+                    System.out.print(", ");
             }
             System.out.println();
         }
