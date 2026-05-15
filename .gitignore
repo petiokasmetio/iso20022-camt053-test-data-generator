@@ -1,0 +1,23 @@
+# Java build output
+*.class
+out/
+target/
+bin/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated XML output files
+camt053_generated.xml
+statement.xml
+*_generated.xml
+*_output.xml
